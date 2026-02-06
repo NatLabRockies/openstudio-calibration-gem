@@ -369,12 +369,14 @@ class GeneralCalibrationMeasurePercentChange < OpenStudio::Measure::ModelMeasure
         people_def = people_inst.peopleDefinition
         if !altered_people_definitions.include? people_def.handle.to_s
           if people_def.peopleperSpaceFloorArea.is_initialized
-            runner.registerInfo("Applying #{people_perc_change} % Change to #{people_def.name.get} PeopleperSpaceFloorArea.")
-            people_def.setPeopleperSpaceFloorArea(people_def.peopleperSpaceFloorArea.get + people_def.peopleperSpaceFloorArea.get * people_perc_change * 0.01)
+		    sched = people_inst.numberofPeopleSchedule.get()
+			people_sched = sched.to_ScheduleDay.get
+            #runner.registerInfo("Applying #{people_perc_change} % Change to #{people_def.name.get} PeopleperSpaceFloorArea.")
+            #people_def.setPeopleperSpaceFloorArea(people_def.peopleperSpaceFloorArea.get + people_def.peopleperSpaceFloorArea.get * people_perc_change * 0.01)
           end
           if people_def.numberofPeople.is_initialized
             runner.registerInfo("Applying #{people_perc_change} % Change to #{people_def.name.get} numberofPeople.")
-            people_def.setNumberofPeople(people_def.numberofPeople.get + people_def.numberofPeople.get * people_perc_change * 0.01)
+            people_def.setNumberofPeople((people_def.numberofPeople.get + 1) + people_def.numberofPeople.get * people_perc_change * 0.01)
           end
           if people_def.spaceFloorAreaperPerson.is_initialized
             runner.registerInfo("Applying #{people_perc_change} % Change to #{people_def.name.get} spaceFloorAreaperPerson.")
@@ -384,7 +386,15 @@ class GeneralCalibrationMeasurePercentChange < OpenStudio::Measure::ModelMeasure
           change_name(people_def, people_perc_change)
           altered_people_definitions << people_def.handle.to_s
         else
-          runner.registerInfo("Skipping change to #{people_def.name.get}")
+		  #Create people definition where missing; AA added
+		  definition = OpenStudio::Model::PeopleDefinition.new(space_type.model)
+          definition.setName("#{space_type.name} People Definition")
+          instance = OpenStudio::Model::People.new(definition)
+          instance.setName("#{space_type.name} People")
+          instance.setSpaceType(space_type)
+          #runner.registerInfo("Skipping change to #{people_def.name.get}") AA commented out 
+		  definition.setPeopleperSpaceFloorArea(0.0210972644167511/2) #half the density of the office 
+		  instance.setNumberofPeopleSchedule(sched) 
         end
       end
 

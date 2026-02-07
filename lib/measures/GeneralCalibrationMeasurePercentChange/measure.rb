@@ -385,7 +385,7 @@ class GeneralCalibrationMeasurePercentChange < OpenStudio::Measure::ModelMeasure
           # update hash and change name
           change_name(people_def, people_perc_change)
           altered_people_definitions << people_def.handle.to_s
-        else
+        elsif !space_type.people.is_initialized #AA modified 
 		  #Create people definition where missing; AA added
 		  definition = OpenStudio::Model::PeopleDefinition.new(space_type.model)
           definition.setName("#{space_type.name} People Definition")

@@ -388,8 +388,7 @@ class GeneralCalibrationMeasurePercentChange < OpenStudio::Measure::ModelMeasure
         end
       end
 	  
-	  space_type.each do |space_type| 
-		if !space_type.people.is_initialized #AA modified 
+	  if !space_type.people.is_initialized #AA modified 
 			  #Create people definition where missing; AA added
 			  runner.registerInfo("#{space_type.name.to_s} being modified") 
 			  definition = OpenStudio::Model::PeopleDefinition.new(space_type.model)
@@ -400,8 +399,8 @@ class GeneralCalibrationMeasurePercentChange < OpenStudio::Measure::ModelMeasure
 			  #runner.registerInfo("Skipping change to #{people_def.name.get}") AA commented out 
 			  definition.setPeopleperSpaceFloorArea(0.0210972644167511/2) #half the density of the office 
 			  instance.setNumberofPeopleSchedule(sched)
-		 end 
-	   end 
+	  end 
+ 
 
       # modify infiltration
       space_type.spaceInfiltrationDesignFlowRates.each do |infiltration|

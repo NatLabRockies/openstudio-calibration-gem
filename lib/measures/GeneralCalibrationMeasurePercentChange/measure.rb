@@ -365,6 +365,7 @@ class GeneralCalibrationMeasurePercentChange < OpenStudio::Measure::ModelMeasure
 
       # modify occupancy
       space_type.people.each do |people_inst| 
+	    runner.registerInfo("#{space_type.name.to_s} in loop") 
         # get and alter definition
         people_def = people_inst.peopleDefinition
         if !altered_people_definitions.include? people_def.handle.to_s

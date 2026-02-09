@@ -364,7 +364,7 @@ class GeneralCalibrationMeasurePercentChange < OpenStudio::Measure::ModelMeasure
       end
 
       # modify occupancy
-      space_type.people.each do |people_inst|
+      space_type.people.each do |people_inst| 
         # get and alter definition
         people_def = people_inst.peopleDefinition
         if !altered_people_definitions.include? people_def.handle.to_s
@@ -384,19 +384,24 @@ class GeneralCalibrationMeasurePercentChange < OpenStudio::Measure::ModelMeasure
           end
           # update hash and change name
           change_name(people_def, people_perc_change)
-          altered_people_definitions << people_def.handle.to_s
-        elsif !space_type.people.is_initialized #AA modified 
-		  #Create people definition where missing; AA added
-		  definition = OpenStudio::Model::PeopleDefinition.new(space_type.model)
-          definition.setName("#{space_type.name} People Definition")
-          instance = OpenStudio::Model::People.new(definition)
-          instance.setName("#{space_type.name} People")
-          instance.setSpaceType(space_type)
-          #runner.registerInfo("Skipping change to #{people_def.name.get}") AA commented out 
-		  definition.setPeopleperSpaceFloorArea(0.0210972644167511/2) #half the density of the office 
-		  instance.setNumberofPeopleSchedule(sched) 
+          altered_people_definitions << people_def.handle.to_s 
         end
       end
+	  
+	  space_type.each do |space_type| 
+		if !space_type.people.is_initialized #AA modified 
+			  #Create people definition where missing; AA added
+			  runner.registerInfo("#{space_type.name.to_s} being modified") 
+			  definition = OpenStudio::Model::PeopleDefinition.new(space_type.model)
+			  definition.setName("#{space_type.name} People Definition")
+			  instance = OpenStudio::Model::People.new(definition)
+			  instance.setName("#{space_type.name} People")
+			  instance.setSpaceType(space_type)
+			  #runner.registerInfo("Skipping change to #{people_def.name.get}") AA commented out 
+			  definition.setPeopleperSpaceFloorArea(0.0210972644167511/2) #half the density of the office 
+			  instance.setNumberofPeopleSchedule(sched)
+		 end 
+	   end 
 
       # modify infiltration
       space_type.spaceInfiltrationDesignFlowRates.each do |infiltration|

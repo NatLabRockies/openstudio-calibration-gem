@@ -495,7 +495,7 @@ class GeneralCalibrationMeasurePercentChange < OpenStudio::Measure::ModelMeasure
     # report initial condition of model
     runner.registerInfo("Applying Variable % Changes to #{spaces.size} spaces.")
 
-    # loop through space types
+    # loop through spaces
     spaces.each do |space|
       # modify lights
       space.lights.each do |light|
@@ -638,10 +638,10 @@ class GeneralCalibrationMeasurePercentChange < OpenStudio::Measure::ModelMeasure
         end
       end
 	  
-	  if !space_type.people.is_initialized #AA modified 
+	  if !space.people.is_initialized #AA modified 
           #Create people definition where missing; AA added
           runner.registerInfo("in if stmt") 
-          runner.registerInfo("#{space_type.name.to_s} being modified") 
+          runner.registerInfo("#{space.name.to_s} being modified") 
           definition = OpenStudio::Model::PeopleDefinition.new(space_type.model)
           definition.setName("#{space_type.name} People Definition")
           instance = OpenStudio::Model::People.new(definition)

@@ -243,7 +243,7 @@ class GeneralCalibrationMeasurePercentChange < OpenStudio::Measure::ModelMeasure
     altered_other_equip_definitions = []
 
     # report initial condition of model
-    unner.registerInitialCondition("Applying Variable % Changes to #{space_types.size} space types and #{spaces.size} spaces.")
+    runner.registerInitialCondition("Applying Variable % Changes to #{space_types.size} space types and #{spaces.size} spaces.")
     runner.registerInfo("Applying Variable % Changes to #{space_types.size} space types.")
 
     # loop through space types
@@ -520,7 +520,7 @@ class GeneralCalibrationMeasurePercentChange < OpenStudio::Measure::ModelMeasure
         else
           runner.registerInfo("Skipping change to #{equip_def.name.get}")
         end
-      end
+      #end
 
       # modify luminaire
       space.luminaires.each do |light|

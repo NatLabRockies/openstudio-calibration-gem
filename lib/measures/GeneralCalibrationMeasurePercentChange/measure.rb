@@ -243,7 +243,7 @@ class GeneralCalibrationMeasurePercentChange < OpenStudio::Measure::ModelMeasure
     altered_other_equip_definitions = []
 
     # report initial condition of model
-    runner.registerInitialCondition("Applying Variable % Changes to #{space_types.size} space types and #{spaces.size} spaces.")
+    unner.registerInitialCondition("Applying Variable % Changes to #{space_types.size} space types and #{spaces.size} spaces.")
     runner.registerInfo("Applying Variable % Changes to #{space_types.size} space types.")
 
     # loop through space types

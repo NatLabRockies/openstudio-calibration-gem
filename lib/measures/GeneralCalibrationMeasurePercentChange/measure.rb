@@ -520,7 +520,7 @@ class GeneralCalibrationMeasurePercentChange < OpenStudio::Measure::ModelMeasure
         else
           runner.registerInfo("Skipping change to #{equip_def.name.get}")
         end
-      #end
+      end
 
       # modify luminaire
       space.luminaires.each do |light|

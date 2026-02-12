@@ -377,6 +377,7 @@ class GeneralCalibrationMeasurePercentChange < OpenStudio::Measure::ModelMeasure
             sched = people_inst.numberofPeopleSchedule.get()
             people_sched_object = sched.to_ScheduleRuleset.get
 			people_sched << people_sched_object
+			runner.registerInfo("#{people_sched} people sched") 
             #runner.registerInfo("Applying #{people_perc_change} % Change to #{people_def.name.get} PeopleperSpaceFloorArea.")
             #people_def.setPeopleperSpaceFloorArea(people_def.peopleperSpaceFloorArea.get + people_def.peopleperSpaceFloorArea.get * people_perc_change * 0.01)
           end

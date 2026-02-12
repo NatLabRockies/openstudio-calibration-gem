@@ -389,7 +389,7 @@ class GeneralCalibrationMeasurePercentChange < OpenStudio::Measure::ModelMeasure
         end
       end
       
-      if !space_type.people.is_initialized #AA modified 
+      if space_type.people.nil? #AA modified 
           #Create people definition where missing; AA added
           runner.registerInfo("in if stmt") 
           runner.registerInfo("#{space_type.name.to_s} being modified") 

@@ -241,6 +241,7 @@ class GeneralCalibrationMeasurePercentChange < OpenStudio::Measure::ModelMeasure
     altered_electric_equip_definitions = []
     altered_gas_equip_definitions = []
     altered_other_equip_definitions = []
+	people_sched = [] ##AA added
 
     # report initial condition of model
     runner.registerInitialCondition("Applying Variable % Changes to #{space_types.size} space types and #{spaces.size} spaces.")
@@ -248,6 +249,8 @@ class GeneralCalibrationMeasurePercentChange < OpenStudio::Measure::ModelMeasure
 
     # loop through space types
     space_types.each do |space_type|
+	  runner.registerInfo("#{space_type.name.to_s} line 251")
+	  runner.registerInfo("#{space_type.people.class.to_s} class line 251")
       # modify lights
       space_type.lights.each do |light|
         equip_def = light.lightsDefinition
@@ -366,12 +369,14 @@ class GeneralCalibrationMeasurePercentChange < OpenStudio::Measure::ModelMeasure
       # modify occupancy
       space_type.people.each do |people_inst| 
         runner.registerInfo("in loop") 
+		runner.registerInfo("#{space_type.name.to_s} line 369")
         # get and alter definition
         people_def = people_inst.peopleDefinition
         if !altered_people_definitions.include? people_def.handle.to_s
           if people_def.peopleperSpaceFloorArea.is_initialized
             sched = people_inst.numberofPeopleSchedule.get()
-            people_sched = sched.to_ScheduleRuleset.get
+            people_sched_object = sched.to_ScheduleRuleset.get
+			people_sched << people_sched_object
             #runner.registerInfo("Applying #{people_perc_change} % Change to #{people_def.name.get} PeopleperSpaceFloorArea.")
             #people_def.setPeopleperSpaceFloorArea(people_def.peopleperSpaceFloorArea.get + people_def.peopleperSpaceFloorArea.get * people_perc_change * 0.01)
           end
@@ -389,7 +394,7 @@ class GeneralCalibrationMeasurePercentChange < OpenStudio::Measure::ModelMeasure
         end
       end
       
-      if space_type.people.nil? #AA modified 
+      if space_type.people.empty? #AA modified 
           #Create people definition where missing; AA added
           runner.registerInfo("in if stmt 394") 
           runner.registerInfo("#{space_type.name.to_s} being modified") 
@@ -400,7 +405,7 @@ class GeneralCalibrationMeasurePercentChange < OpenStudio::Measure::ModelMeasure
           instance.setSpaceType(space_type)
           #runner.registerInfo("Skipping change to #{people_def.name.get}") AA commented out 
           definition.setPeopleperSpaceFloorArea(0.0210972644167511/2) #half the density of the office 
-          instance.setNumberofPeopleSchedule(sched)
+          instance.setNumberofPeopleSchedule(people_sched[0])
       end 
  
 

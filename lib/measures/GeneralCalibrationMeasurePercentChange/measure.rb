@@ -391,7 +391,7 @@ class GeneralCalibrationMeasurePercentChange < OpenStudio::Measure::ModelMeasure
       
       if space_type.people.nil? #AA modified 
           #Create people definition where missing; AA added
-          runner.registerInfo("in if stmt") 
+          runner.registerInfo("in if stmt 394") 
           runner.registerInfo("#{space_type.name.to_s} being modified") 
           definition = OpenStudio::Model::PeopleDefinition.new(space_type.model)
           definition.setName("#{space_type.name} People Definition")

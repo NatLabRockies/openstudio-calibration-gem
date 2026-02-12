@@ -440,26 +440,32 @@ class GeneralCalibrationMeasurePercentChange < OpenStudio::Measure::ModelMeasure
         end
       end
 
-      # modify outdoor air
-      if space_type.designSpecificationOutdoorAir.is_initialized
-        outdoor_air = space_type.designSpecificationOutdoorAir.get
-        # alter values if not already done
-        if !altered_outdoor_air_objects.include? outdoor_air.handle.to_s
-          runner.registerInfo("Applying #{vent_perc_change} % Change to #{outdoor_air.name.get} OutdoorAirFlowperPerson.")
-          outdoor_air.setOutdoorAirFlowperPerson(outdoor_air.outdoorAirFlowperPerson + outdoor_air.outdoorAirFlowperPerson * vent_perc_change * 0.01)
-          runner.registerInfo("Applying #{vent_perc_change} % Change to #{outdoor_air.name.get} OutdoorAirFlowperFloorArea.")
-          outdoor_air.setOutdoorAirFlowperFloorArea(outdoor_air.outdoorAirFlowperFloorArea + outdoor_air.outdoorAirFlowperFloorArea * vent_perc_change * 0.01)
-          runner.registerInfo("Applying #{vent_perc_change} % Change to #{outdoor_air.name.get} OutdoorAirFlowAirChangesperHour.")
-          outdoor_air.setOutdoorAirFlowAirChangesperHour(outdoor_air.outdoorAirFlowAirChangesperHour + outdoor_air.outdoorAirFlowAirChangesperHour * vent_perc_change * 0.01)
-          runner.registerInfo("Applying #{vent_perc_change} % Change to #{outdoor_air.name.get} OutdoorAirFlowRate.")
-          outdoor_air.setOutdoorAirFlowRate(outdoor_air.outdoorAirFlowRate + outdoor_air.outdoorAirFlowRate * vent_perc_change * 0.01)
-          # add to hash and change name
-          change_name(outdoor_air, vent_perc_change)
-          altered_outdoor_air_objects << outdoor_air.handle.to_s
-        else
-          runner.registerInfo("Skipping change to #{outdoor_air.name.get}")
-        end
-      end
+      # modify outdoor air ##AA modified 
+	  #select spaces to modify 
+	  if space_type.designSpecificationOutdoorAir.is_initialized and space_type.designSpecificationOutdoorAir.get.outdoorAirFlowperPerson == 0
+	     runner.registerInfo("#{space_type.name.to_s} space type oa loop") 
+		 oa_spec = space_type.designSpecificationOutdoorAir.get 
+		 oa_spec.setOutdoorAirFlowperPerson(0.005)
+	  end 
+      # if space_type.designSpecificationOutdoorAir.is_initialized
+        # outdoor_air = space_type.designSpecificationOutdoorAir.get
+        # # alter values if not already done
+        # if !altered_outdoor_air_objects.include? outdoor_air.handle.to_s
+          # runner.registerInfo("Applying #{vent_perc_change} % Change to #{outdoor_air.name.get} OutdoorAirFlowperPerson.")
+          # outdoor_air.setOutdoorAirFlowperPerson(outdoor_air.outdoorAirFlowperPerson + outdoor_air.outdoorAirFlowperPerson * vent_perc_change * 0.01)
+          # runner.registerInfo("Applying #{vent_perc_change} % Change to #{outdoor_air.name.get} OutdoorAirFlowperFloorArea.")
+          # outdoor_air.setOutdoorAirFlowperFloorArea(outdoor_air.outdoorAirFlowperFloorArea + outdoor_air.outdoorAirFlowperFloorArea * vent_perc_change * 0.01)
+          # runner.registerInfo("Applying #{vent_perc_change} % Change to #{outdoor_air.name.get} OutdoorAirFlowAirChangesperHour.")
+          # outdoor_air.setOutdoorAirFlowAirChangesperHour(outdoor_air.outdoorAirFlowAirChangesperHour + outdoor_air.outdoorAirFlowAirChangesperHour * vent_perc_change * 0.01)
+          # runner.registerInfo("Applying #{vent_perc_change} % Change to #{outdoor_air.name.get} OutdoorAirFlowRate.")
+          # outdoor_air.setOutdoorAirFlowRate(outdoor_air.outdoorAirFlowRate + outdoor_air.outdoorAirFlowRate * vent_perc_change * 0.01)
+          # # add to hash and change name
+          # change_name(outdoor_air, vent_perc_change)
+          # altered_outdoor_air_objects << outdoor_air.handle.to_s
+        # else
+          # runner.registerInfo("Skipping change to #{outdoor_air.name.get}")
+        # end
+      # end
 
       # modify internal mass
       space_type.internalMass.each do |internalmass|

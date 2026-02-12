@@ -371,7 +371,7 @@ class GeneralCalibrationMeasurePercentChange < OpenStudio::Measure::ModelMeasure
         if !altered_people_definitions.include? people_def.handle.to_s
           if people_def.peopleperSpaceFloorArea.is_initialized
             sched = people_inst.numberofPeopleSchedule.get()
-            people_sched = sched.to_ScheduleDay.get
+            people_sched = sched.to_ScheduleRuleset.get
             #runner.registerInfo("Applying #{people_perc_change} % Change to #{people_def.name.get} PeopleperSpaceFloorArea.")
             #people_def.setPeopleperSpaceFloorArea(people_def.peopleperSpaceFloorArea.get + people_def.peopleperSpaceFloorArea.get * people_perc_change * 0.01)
           end

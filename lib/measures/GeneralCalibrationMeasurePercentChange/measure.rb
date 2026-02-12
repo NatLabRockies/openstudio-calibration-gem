@@ -447,6 +447,9 @@ class GeneralCalibrationMeasurePercentChange < OpenStudio::Measure::ModelMeasure
 	     runner.registerInfo("#{space_type.name.to_s} space type oa loop") 
 		 oa_spec = space_type.designSpecificationOutdoorAir.get 
 		 oa_spec.setOutdoorAirFlowperPerson(0.005)
+		 runner.registerInfo("oa spec #{oa_spec placed}") 
+		 oa_spec_placed = space_type.designSpecificationOutdoorAir.get
+		 runner.registerInfo("oa spec resulting #{oa_spec_placed}") 
 	  end 
       # if space_type.designSpecificationOutdoorAir.is_initialized
         # outdoor_air = space_type.designSpecificationOutdoorAir.get

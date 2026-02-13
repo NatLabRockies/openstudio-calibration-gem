@@ -394,21 +394,6 @@ class GeneralCalibrationMeasurePercentChange < OpenStudio::Measure::ModelMeasure
           altered_people_definitions << people_def.handle.to_s 
         end
       end
-      
-      if space_type.people.empty? #AA modified 
-          #Create people definition where missing; AA added
-          runner.registerInfo("in if stmt 394") 
-          runner.registerInfo("#{space_type.name.to_s} being modified") 
-          definition = OpenStudio::Model::PeopleDefinition.new(space_type.model)
-          definition.setName("#{space_type.name} People Definition")
-          instance = OpenStudio::Model::People.new(definition)
-          instance.setName("#{space_type.name} People")
-          instance.setSpaceType(space_type)
-          #runner.registerInfo("Skipping change to #{people_def.name.get}") AA commented out 
-          definition.setPeopleperSpaceFloorArea(0.0210972644167511/2) #half the density of the office 
-          instance.setNumberofPeopleSchedule(people_sched[0])
-      end 
- 
 
       # modify infiltration
       space_type.spaceInfiltrationDesignFlowRates.each do |infiltration|
@@ -496,6 +481,22 @@ class GeneralCalibrationMeasurePercentChange < OpenStudio::Measure::ModelMeasure
         end
       end
     end
+	  
+space_types.each do |space_type| ##AA looping thru again to get space types w/o people object, need to make sure schedules already populated
+		if space_type.people.empty? #AA modified 
+		  #Create people definition where missing; AA added
+		  runner.registerInfo("in if stmt 394") 
+		  runner.registerInfo("#{space_type.name.to_s} being modified") 
+		  definition = OpenStudio::Model::PeopleDefinition.new(space_type.model)
+		  definition.setName("#{space_type.name} People Definition")
+		  instance = OpenStudio::Model::People.new(definition)
+		  instance.setName("#{space_type.name} People")
+		  instance.setSpaceType(space_type)
+		  #runner.registerInfo("Skipping change to #{people_def.name.get}") AA commented out 
+		  definition.setPeopleperSpaceFloorArea(0.0210972644167511/2) #half the density of the office 
+		  instance.setNumberofPeopleSchedule(people_sched[0])
+		end 
+	end 
 
     runner.registerInfo("altered_lights_definitions: #{altered_lights_definitions}")
     runner.registerInfo("altered_luminaires_definitions: #{altered_luminaires_definitions}")
@@ -651,20 +652,6 @@ class GeneralCalibrationMeasurePercentChange < OpenStudio::Measure::ModelMeasure
         else
           runner.registerInfo("Skipping change to #{people_def.name.get}")
         end
-      end
-	  
-	  if space.people.nil? #AA modified 
-          #Create people definition where missing; AA added
-          runner.registerInfo("in if stmt") 
-          runner.registerInfo("#{space.name.to_s} being modified") 
-          definition = OpenStudio::Model::PeopleDefinition.new(space_type.model)
-          definition.setName("#{space_type.name} People Definition")
-          instance = OpenStudio::Model::People.new(definition)
-          instance.setName("#{space_type.name} People")
-          instance.setSpaceType(space_type)
-          #runner.registerInfo("Skipping change to #{people_def.name.get}") AA commented out 
-          definition.setPeopleperSpaceFloorArea(0.0210972644167511/2) #half the density of the office 
-          instance.setNumberofPeopleSchedule(sched)
       end 
 
       # modify infiltration
